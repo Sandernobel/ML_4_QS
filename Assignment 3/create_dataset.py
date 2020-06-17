@@ -21,9 +21,7 @@ values = dict()
 for user in range(1,11):
     values[f'user_{user}'] = dict()
 
-    user_path = f'{DATAFILES}U{user}'
-
-    for file in os.listdir(user_path):
+    for file in os.listdir(f'{DATAFILES}U{user}'):
 
         if 'Bus' in file:
             label = 'bus'
@@ -37,7 +35,7 @@ for user in range(1,11):
             label = 'walking'
 
         start_time = int(file[-17:-4])
-        with open(f'{user_path}/{file}', 'r') as fw:
+        with open(f'{DATAFILES}U{user}/{file}', 'r') as fw:
             lines = fw.read().splitlines()
 
             for line in lines:
@@ -57,8 +55,8 @@ for user in range(1,11):
                     values[f'user_{user}'][sensor][start_time+int(line[0])] = dict(x=line[2], y=line[3], z=line[4],
                                                                              transport=label)
 
-    if not os.path.exists(user_path):
-        os.mkdir(user_path)
+    if not os.path.exists(f'{DATAFILES}user_{user}'):
+        os.mkdir(f'{DATAFILES}user_{user}')
     out_file = f'{DATAFILES}user_{user}'
 
     for value in values[f'user_{user}'].keys():
