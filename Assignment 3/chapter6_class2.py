@@ -27,6 +27,11 @@ from util.VisualizeDataset import VisualizeDataset
 
 pd.set_option('display.max_rows',(None))
 
+labels = []
+with open('../datasets/wisdm-dataset/activity_key.txt') as fw:
+    for line in fw.readlines():
+        labels.append(line.split(' ')[0])
+
 user = 1600
 # Read the result from the previous chapter, and make sure the index is of the type datetime.
 DATA_PATH = Path('../intermediate_datafiles/')
@@ -154,6 +159,11 @@ DataViz = VisualizeDataset(user, __file__, skip_plots=2)
 DataViz.plot_confusion_matrix(test_cm, class_train_prob_y.columns, normalize=False)
 
 print(f'Accuracy: {eval.accuracy(y_test, class_test_y)}')
-print(f'Recall: {eval.recall(y_test, class_test_y)}')
-print(f'Precision: {eval.precision(y_test, class_test_y)}')
-print(f'F-measure: {eval.f1(y_test, class_test_y)}')
+
+recall = {labels[i]:eval.recall(y_test,class_test_y)[i] for i in range(len(labels))}
+precision = {labels[i]:eval.precision(y_test,class_test_y)[i] for i in range(len(labels))}
+f1 = {labels[i]:eval.f1(y_test,class_test_y)[i] for i in range(len(labels))}
+
+print(f'Recall: {recall}')
+print(f'Precision: {precision}')
+print(f'F-measure: {f1}')
